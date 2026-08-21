@@ -15,7 +15,7 @@ from pathlib import Path
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 指定目标网址
-targets = ["example.com", ""]
+targets = ["https://www.example.com/", ""]
 
 """
 # 代理配置 本地回环ip后面填写代理端口(v2rayN的代理端口通常是10808或10809，可在软件底部状态栏察看实际端口) 不使用代理则设置为 PROXIES = None 
@@ -143,15 +143,15 @@ Censys MMH3 Search link:
 {"="*48}"""]
 
         else:
-            print(f"下载失败，网页状态码: {response.status_code}")
-            row_data = [f"""{"-"*8}目标 {url} 的网站图标下载失败{"-"*8}\n图标链接: {favicon_url}\n状态码: {response.status_code}\n"""]
+            print(f"Failed to download website icon. Status code: {response.status_code}")
+            row_data = [f"""{"-"*4}Target {url} Failed to download website icon.{"-"*4}\nFavicon link: {favicon_url}\Status code: {response.status_code}\n"""]
                     
     except requests.exceptions.RequestException as e:
-        print(f" 网络请求异常: {e}")
-        row_data = [f"""{"-"*8}解析目标 {url} 的哈希值时出现网络异常{"-"*8}\n图标链接: {favicon_url}\n报错信息:\n{str(e)}\n{"-"*92}"""]
+        print(f"Network error: {e}")
+        row_data = [f"""{"-"*4}Target {url} Network exception occurred while parsing the hash value.{"-"*4}\nFavicon link: {favicon_url}\nError message:\n{str(e)}\n{"-"*92}"""]
     except Exception as e:
-        print(f"出现未知异常: {e}")
-        row_data = [f"""{"-"*8}解析目标 {url} 时出现异常 {"-"*8}\n图标链接: {favicon_url}\n报错信息:\n{str(e)}\n{"-"*92}"""]
+        print(f"unexpected error occurred: {e}")
+        row_data = [f"""{"-"*8}Target {url} Parsing exception.{"-"*8}\nFavicon link: {favicon_url}\nError message:\n{str(e)}\n{"-"*92}"""]
 
     # 使用线程锁，确保同一时间只有一个线程写入文件，防止数据错乱
     with thread_lock:
@@ -183,7 +183,7 @@ def main():
             for future in as_completed(futures):
                 pass
 
-    print(f"""{"="*40}\n解析结束 结果已保存至: {out_file}""")
+    print(f"""{"="*40}\nAnalysis complete. Results have been saved to: {out_file}""")
 
 
 if __name__ == "__main__":
