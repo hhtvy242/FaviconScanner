@@ -100,7 +100,7 @@ def get_real_favicon_url(base_url, proxies):
 
 def process_url(url, proxies, writer):
     """单个URL的处理逻辑（由子线程调用）"""
-    print(f"[+] 正在探测目标: {url}")
+    print(f"[+] Detecting Target: {url}")
     favicon_url = get_real_favicon_url(url, proxies)
 
     try:
@@ -138,47 +138,47 @@ def process_url(url, proxies, writer):
             censys_url_md5 = f"{censys_search_md5}{md5_hash}%22"
             censys_url_mmh3 = f"{censys_search_mmh3}{mmh3_hash}%22"
             
-            print(f"{'='*40}\n目标 {url} 的哈希值获取成功")
-            print(f"   ICON 链接: {favicon_url}")
-            print(f"   MMH3 哈希值: {mmh3_hash}")
-            print(f"   MD5  哈希值: {md5_hash}")
-            print(f"   Shodan 搜索链接: {shodan_url}")
-            print(f"   Virustotal 搜索链接: {virustotal_url}")
-            print(f"   Censys MD5搜索链接: {censys_url_md5}")
-            print(f"   Censys MMH3搜索链接: {censys_url_mmh3}")
+            print(f"{'='*40}\nTarget {url} Hash value successfully retrieved")
+            print(f"   ICON link: {favicon_url}")
+            print(f"   MMH3 hash: {mmh3_hash}")
+            print(f"   MD5  hash: {md5_hash}")
+            print(f"   Shodan Search link: {shodan_url}")
+            print(f"   Virustotal Search link: {virustotal_url}")
+            print(f"   Censys MD5 Search link: {censys_url_md5}")
+            print(f"   Censys MMH3 Search link: {censys_url_mmh3}")
             
-            row_data = [f"""{"="*8}目标{url} 的解析结果{"="*8}
-ICON 链接: {favicon_url}
-MMH3 哈希值: {mmh3_hash}
-MD5  哈希值: {md5_hash}
-Shodan搜索语法: 
+            row_data = [f"""{"="*8}Target {url} Analysis results{"="*8}
+ICON link: {favicon_url}
+MMH3 hash: {mmh3_hash}
+MD5  hash: {md5_hash}
+Shodan Search query: 
 {shodan_query}
-Virustotal 搜索语法: 
+Virustotal Search query: 
 {virustotal_query}
-Censys MD5搜索语法: 
+Censys MD5 Search query: 
 {censys_query_md5}
-Censys MMH3搜索语法:
+Censys MMH3 Search query:
 {censys_query_mmh3}
-Shodan搜索链接: 
+Shodan Search link: 
 {shodan_url}
-Virustotal 搜索链接:
+Virustotal Search link:
 {virustotal_url}
-Censys MD5搜索链接: 
+Censys MD5 Search link: 
 {censys_url_md5}
-Censys MMH3搜索链接:
+Censys MMH3 Search link:
 {censys_url_mmh3}
 {"="*48}"""]
 
         else:
-            print(f"下载失败，网页状态码: {response.status_code}")
-            row_data = [f"""{"-"*8}目标 {url} 的网站图标下载失败{"-"*8}\n图标链接: {favicon_url}\n状态码: {response.status_code}\n"""]
+            print(f"Failed to download website icon. Status code: {response.status_code}")
+            row_data = [f"""{"-"*8}Target {url} Failed to download website icon.{"-"*8}\nFavicon link: {favicon_url}\Status code: {response.status_code}\n"""]
                     
     except requests.exceptions.RequestException as e:
-        print(f" 网络请求异常: {e}")
-        row_data = [f"""{"-"*8}解析目标 {url} 的哈希值时出现网络异常{"-"*8}\n图标链接: {favicon_url}\n报错信息:\n{str(e)}\n{"-"*92}"""]
+        print(f"Network error: {e}")
+        row_data = [f"""{"-"*4}Target {url} Network exception occurred while parsing the hash value.{"-"*4}\nFavicon link: {favicon_url}\nError message:\n{str(e)}\n{"-"*92}"""]
     except Exception as e:
-        print(f"出现未知异常: {e}")
-        row_data = [f"""{"-"*8}解析目标 {url} 时出现异常 {"-"*8}\n图标链接: {favicon_url}\n报错信息:\n{str(e)}\n{"-"*92}"""]
+        print(f"unexpected error occurred: {e}")
+        row_data = [f"""{"-"*8}Target {url} Parsing exception {"-"*8}\nFavicon link: {favicon_url}\nError message:\n{str(e)}\n{"-"*92}"""]
 
     # 使用线程锁，确保同一时间只有一个线程写入文件，防止数据错乱
     with thread_lock:
@@ -192,20 +192,20 @@ def main():
     proxies = None
     if args.proxy:
         proxies = {"http": args.proxy, "https": args.proxy}
-        print(f"已启用代理：{args.proxy}")
+        print(f"Proxy enabled：{args.proxy}")
     else:
-        print("未启用代理，使用本地直连")
+        print("Proxy not enabled; using local connection.")
         
     # 2. 读取目标网址
     if not os.path.exists(args.input):
-        print(f"error：找不到输入文件 {args.input}")
+        print(f"error：Input file not found {args.input}")
         sys.exit(1)
 
     with open(args.input, "r", encoding="utf-8") as f:
         # 去除每一行的空格和换行符并过滤空行
         targets = [line.strip() for line in f if line.strip()]
     
-    print(f"成功载入{len(targets)}个目标网址 当前线程并发数{args.threads}\n开始扫描...")
+    print(f"Successfully loaded {len(targets)} target URLs. Current thread concurrency count: {args.threads}\nStart scanning...")
     
     out_path = Path(args.output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -226,7 +226,7 @@ def main():
             for future in as_completed(futures):
                 pass
 
-    print(f"""{"="*40}\n解析结束 结果已保存至: {args.output}""")
+    print(f"""{"="*40}\nAnalysis complete. Results have been saved to: {args.output}""")
 
 
 if __name__ == "__main__":
