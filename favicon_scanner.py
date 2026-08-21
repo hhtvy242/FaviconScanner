@@ -73,7 +73,7 @@ def get_real_favicon_url(base_url, proxies):
 
 def process_url(url, proxies, writer):
     """单个URL的处理逻辑（由子线程调用）"""
-    print(f"[+] 正在探测目标: {url}")
+    print(f"[+] Detecting Target: {url}")
     favicon_url = get_real_favicon_url(url, proxies)
 
     try:
@@ -111,34 +111,34 @@ def process_url(url, proxies, writer):
             censys_url_md5 = f"{censys_search_md5}{md5_hash}%22"
             censys_url_mmh3 = f"{censys_search_mmh3}{mmh3_hash}%22"
             
-            print(f"{'='*40}\n目标 {url} 的哈希值获取成功")
-            print(f"   ICON 链接: {favicon_url}")
-            print(f"   MMH3 哈希值: {mmh3_hash}")
-            print(f"   MD5  哈希值: {md5_hash}")
-            print(f"   Shodan 搜索链接: {shodan_url}")
-            print(f"   Virustotal 搜索链接: {virustotal_url}")
-            print(f"   Censys MD5搜索链接: {censys_url_md5}")
-            print(f"   Censys MMH3搜索链接: {censys_url_mmh3}")
+            print(f"{'='*40}\nTarget {url} Hash value successfully retrieved")
+            print(f"   ICON link: {favicon_url}")
+            print(f"   MMH3 hash: {mmh3_hash}")
+            print(f"   MD5  hash: {md5_hash}")
+            print(f"   Shodan Search link: {shodan_url}")
+            print(f"   Virustotal Search link: {virustotal_url}")
+            print(f"   Censys MD5 Search link: {censys_url_md5}")
+            print(f"   Censys MMH3 Search link: {censys_url_mmh3}")
             
-            row_data = [f"""{"="*8}目标{url} 的解析结果{"="*8}
-ICON 链接: {favicon_url}
-MMH3 哈希值: {mmh3_hash}
-MD5  哈希值: {md5_hash}
-Shodan搜索语法: 
+            row_data = [f"""{"="*8}Target {url} Analysis results{"="*8}
+ICON link: {favicon_url}
+MMH3 hash: {mmh3_hash}
+MD5  hash: {md5_hash}
+Shodan Search query: 
 {shodan_query}
-Virustotal 搜索语法: 
+Virustotal Search query: 
 {virustotal_query}
-Censys MD5搜索语法: 
+Censys MD5 Search query: 
 {censys_query_md5}
-Censys MMH3搜索语法:
+Censys MMH3 Search query:
 {censys_query_mmh3}
-Shodan搜索链接: 
+Shodan Search link: 
 {shodan_url}
-Virustotal 搜索链接:
+Virustotal Search link:
 {virustotal_url}
-Censys MD5搜索链接: 
+Censys MD5 Search link: 
 {censys_url_md5}
-Censys MMH3搜索链接:
+Censys MMH3 Search link:
 {censys_url_mmh3}
 {"="*48}"""]
 
@@ -163,7 +163,7 @@ def main():
     proxies = PROXIES
         
     # 2. 设置导出文件
-    out_file = r"E:\BugBounty\pythonscript\ip_plumb\favicon_scanner\output\out_hash.csv"
+    out_file = r"./out_hash.csv"
     out_path = Path(out_file)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_file = Path(out_file)
