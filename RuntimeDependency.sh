@@ -1,3 +1,5 @@
+#!bin/bash
+
 pip install mmh3
 pip install requests
 
