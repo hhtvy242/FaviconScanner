@@ -2,6 +2,7 @@
 
 pip install mmh3
 pip install requests
+pip install cryptography
 
 echo
 echo "Runtime dependencies have been installed."
